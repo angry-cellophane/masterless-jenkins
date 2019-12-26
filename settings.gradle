@@ -1,0 +1,4 @@
+include ':build-ui'
+include ':jenkins-master-image'
+include ':job-controller'
+include ':reporting-plugin'

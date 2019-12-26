@@ -1,0 +1,16 @@
+plugins {
+    id 'net.researchgate.release' version '2.7.0' apply false
+    id "org.jetbrains.gradle.plugin.idea-ext" version "0.5"
+}
+
+repositories {
+    jcenter()
+}
+
+
+subprojects {
+    repositories {
+        jcenter()
+    }
+
+}
