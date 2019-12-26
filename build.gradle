@@ -1,16 +1,24 @@
 plugins {
     id 'net.researchgate.release' version '2.7.0' apply false
-    id "org.jetbrains.gradle.plugin.idea-ext" version "0.5"
+    id 'org.jenkins-ci.jpi' version '0.36.0' apply false
+
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '0.5'
 }
 
 repositories {
     jcenter()
 }
 
+ext.libraries = [
+]
 
 subprojects {
     repositories {
         jcenter()
     }
 
+    apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_10
+    targetCompatibility = JavaVersion.VERSION_1_10
 }
