@@ -1,0 +1,10 @@
+# vim
+**/.*.un~
+
+# idea
+.idea/
+*.iml
+
+# gradle
+.gradle/
+build/
