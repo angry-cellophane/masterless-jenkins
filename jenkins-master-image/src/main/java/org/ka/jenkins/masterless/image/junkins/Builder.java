@@ -32,6 +32,7 @@ public class Builder {
 
             var servlet = Jetty.create(this.warExploded);
             var jenkins = new Hudson(rootDir, servlet, new LocalPluginManager(servlet, rootDir));
+            jenkins.setCrumbIssuer(new DummyCrumbIssuer());
             return new Junkins(jenkins);
         } catch (Exception e) {
             throw new JunkinsException(e);
