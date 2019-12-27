@@ -1,0 +1,65 @@
+apply plugin: 'org.jenkins-ci.jpi'
+
+dependencies {
+    implementation 'org.jenkins-ci.plugins:structs:1.20@jar'
+    implementation 'org.jenkins-ci.plugins:structs:1.20'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-api:2.38@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-api:2.38'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-cps:2.78@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-cps:2.78'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-job:2.36@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-job:2.36'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-basic-steps:2.18@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-basic-steps:2.18'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-durable-task-step:2.35@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-durable-task-step:2.35'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-step-api:2.20@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-step-api:2.20'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-support:3.3@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-support:3.3'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-scm-step:2.9@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-scm-step:2.9'
+    implementation 'org.jenkins-ci.plugins:durable-task:1.33@jar'
+    implementation 'org.jenkins-ci.plugins:durable-task:1.33'
+    implementation 'org.jenkins-ci.plugins:script-security:1.68@jar'
+    implementation 'org.jenkins-ci.plugins:script-security:1.68'
+    implementation 'org.kohsuke:groovy-sandbox:1.25'
+
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.8.0'
+
+    implementation 'com.cloudbees:groovy-cps:1.31'
+    implementation 'org.jboss.marshalling:jboss-marshalling:2.0.9.Final'
+    implementation 'org.jenkins-ci.plugins:scm-api:2.6.3@jar'
+    implementation 'org.jenkins-ci.main:jenkins-test-harness:2.58'
+    implementation 'org.jenkins-ci.main:jenkins-war:2.176.4'
+
+    testImplementation libraries.GROOVY
+    testImplementation libraries.SPOCK
+    testImplementation libraries.JUNIT
+}
+
+task deletePlugins(type: Delete) {
+    delete "${buildDir}/plugins"
+}
+
+task copyPlugins(type: Copy, dependsOn: deletePlugins) {
+    into "${buildDir}/plugins"
+    from(configurations.default) {
+        include '*.hpi'
+        include '*.jpi'
+    }
+}
+
+task deleteWar(type: Delete) {
+    delete "${buildDir}/war"
+}
+
+task explodeWar(type: Copy, dependsOn: [deleteWar, copyPlugins]) {
+    def jenkinsWar = file(configurations.default.find { it.name.startsWith('jenkins-war') && it.name.endsWith('.war')})
+
+    from zipTree(jenkinsWar)
+    into "${buildDir}/war"
+}
+
+test.dependsOn(explodeWar)
+test.dependsOn(copyPlugins)
