@@ -10,11 +10,12 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.jvnet.hudson.test.JenkinsRule;
 
-public class Junkins {
+public class App {
     static final String PIPELINE = "node('master') { sh 'echo hello' }";
 
     public static void main(String[] args) throws Throwable {
         var rule = new JenkinsRule();
+//        rule.setPluginManager(new LocalPluginManager(new File("./build/plugins")));
 
         var statement = new Statement() {
             @Override
@@ -30,7 +31,7 @@ public class Junkins {
                 System.out.println("logs: " + run.getLog());
             }
         };
-        var description = Description.createTestDescription(Junkins.class, "jenkins");
+        var description = Description.createTestDescription(App.class, "jenkins");
 
         rule.apply(statement, description).evaluate();
         System.out.println("done");
