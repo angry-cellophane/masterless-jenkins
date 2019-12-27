@@ -1,8 +1,5 @@
 package org.ka.jenkins.masterless.image.junkins;
 
-import hudson.LocalPluginManager;
-import hudson.model.Hudson;
-
 import java.io.File;
 import java.nio.file.Files;
 
@@ -31,8 +28,7 @@ public class Builder {
             PreconfigureJunkins.run();
 
             var servlet = Jetty.create(this.warExploded);
-            var jenkins = new Hudson(rootDir, servlet, new LocalPluginManager(servlet, rootDir));
-            jenkins.setCrumbIssuer(new DummyCrumbIssuer());
+            var jenkins = JenkinsBuilder.build(rootDir, servlet);
             return new Junkins(jenkins);
         } catch (Exception e) {
             throw new JunkinsException(e);
