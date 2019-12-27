@@ -28,8 +28,9 @@ public class Builder {
             setDefaultValues();
             verifyValues();
 
-            var servlet = Jetty.create(this.warExploded);
+            PreconfigureJunkins.run();
 
+            var servlet = Jetty.create(this.warExploded);
             var jenkins = new Hudson(rootDir, servlet, new LocalPluginManager(servlet, rootDir));
             return new Junkins(jenkins);
         } catch (Exception e) {

@@ -4,12 +4,28 @@ import hudson.ClassicPluginStrategy;
 import hudson.DNSMultiCast;
 import hudson.Functions;
 
+import java.io.File;
+
 public class PreconfigureJunkins {
 
     public static void run() {
-        Functions.DEBUG_YUI = false;
-        DNSMultiCast.disabled = true;
-        ClassicPluginStrategy.useAntClassLoader = false;
+        try {
+            if (Functions.isWindows()) {
+                // JENKINS-4409.
+                // URLConnection caches handles to jar files by default,
+                // and it prevents delete temporary directories on Windows.
+                // Disables caching here.
+                // Though defaultUseCache is a static field,
+                // its setter and getter are provided as instance methods.
+                var connection = new File(".").toURI().toURL().openConnection();
+                connection.setDefaultUseCaches(false);
+            }
+            Functions.DEBUG_YUI = false;
+            DNSMultiCast.disabled = true;
+            ClassicPluginStrategy.useAntClassLoader = false;
+        } catch (Exception e) {
+            throw new JunkinsException(e);
+        }
     }
 
     private PreconfigureJunkins() {}
