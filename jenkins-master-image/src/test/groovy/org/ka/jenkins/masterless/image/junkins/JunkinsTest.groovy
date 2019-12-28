@@ -1,6 +1,7 @@
 package org.ka.jenkins.masterless.image.junkins
 
 import hudson.model.Result
+import jenkins.model.Jenkins
 import org.apache.commons.io.FileUtils
 import spock.lang.Shared
 import spock.lang.Specification
@@ -15,7 +16,6 @@ class JunkinsTest extends Specification {
     void setupSpec() {
         root = Files.createTempDirectory('jenkins').toFile()
         root.deleteOnExit()
-        println "root = ${root.getAbsolutePath()}"
 
         def plugins = root.toPath().resolve('plugins').toFile()
         plugins.mkdir()
@@ -38,6 +38,20 @@ class JunkinsTest extends Specification {
     void 'junkins is running'() {
         expect:
         junkins.running
+    }
+
+    void 'plugins are loaded'() {
+        given:
+        def jenkins = Jenkins.get()
+
+        expect:
+        jenkins.getPlugin('durable-task') != null
+        jenkins.getPlugin('workflow-cps') != null
+        jenkins.getPlugin('workflow-job') != null
+        jenkins.getPlugin('workflow-support') != null
+        jenkins.getPlugin('scm-api') != null
+        jenkins.getPlugin('configuration-as-code') != null
+        jenkins.getPlugin('script-security') != null
     }
 
     void 'run a pipeline build'() {
