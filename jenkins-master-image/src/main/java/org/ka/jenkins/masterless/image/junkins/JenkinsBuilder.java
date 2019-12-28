@@ -4,17 +4,22 @@ import hudson.LocalPluginManager;
 import hudson.WebAppMain;
 import hudson.model.Hudson;
 import hudson.model.JDK;
+import hudson.model.UpdateSite;
+import hudson.util.PersistedList;
 import jenkins.model.Jenkins;
+import jenkins.model.JenkinsLocationConfiguration;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import java.io.File;
 
 public class JenkinsBuilder {
 
-    public static Jenkins build(File rootDir, ServletContext servlet) {
+    public static Jenkins build(File rootDir, Jetty.JettyContext jetty) {
         try {
+            var servlet = jetty.getServletContext();
             var jenkins = new Hudson(rootDir, servlet, new LocalPluginManager(servlet, rootDir));
+
+            JenkinsLocationConfiguration.get().setUrl("http://localhost:" + jetty.getPort() + "/jenkins/");
 
             jenkins.setNoUsageStatistics(true);
             jenkins.servletContext.setAttribute("app", jenkins);
@@ -24,6 +29,10 @@ public class JenkinsBuilder {
             // use the current jdk as the default one
             jenkins.getJDKs().add(new JDK("default", System.getProperty("java.home")));
             jenkins.setCrumbIssuer(new DummyCrumbIssuer());
+
+            PersistedList<UpdateSite> sites = jenkins.getUpdateCenter().getSites();
+            sites.clear();
+
             return jenkins;
         } catch (Exception e) {
             throw new JunkinsException(e);

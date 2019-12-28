@@ -1,5 +1,6 @@
 package org.ka.jenkins.masterless.image.junkins;
 
+import jenkins.model.JenkinsLocationConfiguration;
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -25,10 +26,14 @@ import java.util.logging.Logger;
 public class Jetty {
     private static final Logger LOG = Logger.getLogger(Jetty.class.getName());
 
-    public static ServletContext create(File warExploded) {
-        jettyLevel(Level.WARNING);
-        LOG.entering(Jetty.class.getName(), "create");
+    public interface JettyContext {
+        int getPort();
+        ServletContext getServletContext();
+        Runnable doStop();
+    }
 
+    public static JettyContext startNewServer(File warExploded) {
+        LOG.entering(Jetty.class.getName(), "newContext");
         var server = new Server(jettyThreadPool());
         var webApp = newWebApp(warExploded);
 
@@ -40,6 +45,7 @@ public class Jetty {
         connector.setHost("localhost");
 
         server.addConnector(connector);
+
         try {
             LOG.log(Level.FINE, "starting jetty");
             server.start();
@@ -48,12 +54,35 @@ public class Jetty {
             throw new JunkinsException(e);
         }
 
-        LOG.exiting(Jetty.class.getName(), "create");
-        jettyLevel(Level.INFO);
-        return webApp.getServletContext();
+        LOG.exiting(Jetty.class.getName(), "newContext");
+        return new JettyContext() {
+
+            @Override
+            public int getPort() {
+                return connector.getLocalPort();
+            }
+
+            @Override
+            public ServletContext getServletContext() {
+                return webApp.getServletContext();
+            }
+
+            @Override
+            public Runnable doStop() {
+                return () -> {
+                    try {
+                        synchronized (server) {
+                            server.stop();
+                        }
+                    } catch (Exception e) {
+                        throw new JunkinsException(e);
+                    }
+                };
+            }
+        };
     }
 
-    static WebAppContext newWebApp(File warExploded) {
+    private static WebAppContext newWebApp(File warExploded) {
         Logger.getLogger("org.eclipse.jetty").setLevel(Level.WARNING);
 
         var path = warExploded.getAbsolutePath();
@@ -69,7 +98,7 @@ public class Jetty {
         return context;
     }
 
-    static LoginService loginService() {
+    private static LoginService loginService() {
         var service = new HashLoginService();
         service.setName("default");
         service.setUserStore(new UserStore());
@@ -77,23 +106,19 @@ public class Jetty {
         return service;
     }
 
-    static MimeTypes mimeTypes() {
+    private static MimeTypes mimeTypes() {
         var mimeTypes = new MimeTypes();
         mimeTypes.addMimeMapping("js", "application/javascript");
         return mimeTypes;
     }
 
-    static ThreadPool jettyThreadPool() {
+    private static ThreadPool jettyThreadPool() {
         return new ThreadPoolImpl(new ThreadPoolExecutor(1, 2, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
                 r -> {
                     Thread t = new Thread(r);
                     t.setName("Jetty Thread Pool");
                     return t;
                 }));
-    }
-
-    private static void jettyLevel(Level level) {
-        Logger.getLogger("org.eclipse.jetty").setLevel(level);
     }
 
     private Jetty() {}

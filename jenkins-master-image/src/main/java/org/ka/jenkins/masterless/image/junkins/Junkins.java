@@ -6,9 +6,11 @@ import jenkins.model.Jenkins;
 public class Junkins {
 
     private final Jenkins jenkins;
+    private final Runnable onStop;
 
-    Junkins(Jenkins jenkins) {
+    Junkins(Jenkins jenkins, Runnable onStop) {
         this.jenkins = jenkins;
+        this.onStop = onStop;
     }
 
     public boolean isRunning() {
@@ -16,11 +18,7 @@ public class Junkins {
     }
 
     public void stop() {
-        try {
-            jenkins.doQuietDown(true, 0);
-        } catch (Exception e) {
-            throw new JunkinsException(e);
-        }
+        onStop.run();
     }
 
     public static Builder builder() {

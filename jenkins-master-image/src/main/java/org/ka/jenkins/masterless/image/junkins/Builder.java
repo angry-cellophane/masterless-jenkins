@@ -1,5 +1,9 @@
 package org.ka.jenkins.masterless.image.junkins;
 
+import hudson.DescriptorExtensionList;
+import hudson.ExtensionList;
+import jenkins.model.Jenkins;
+
 import java.io.File;
 import java.nio.file.Files;
 
@@ -26,13 +30,21 @@ public class Builder {
             verifyValues();
 
             PreconfigureJunkins.run();
-
-            var servlet = Jetty.create(this.warExploded);
-            var jenkins = JenkinsBuilder.build(rootDir, servlet);
-            return new Junkins(jenkins);
+            var jetty = Jetty.startNewServer(this.warExploded);
+            var jenkins = JenkinsBuilder.build(rootDir, jetty);
+            return new Junkins(jenkins, onStop(jenkins, jetty::doStop));
         } catch (Exception e) {
             throw new JunkinsException(e);
         }
+    }
+
+    private Runnable onStop(Jenkins jenkins, Runnable stopJetty) {
+        return () -> {
+            stopJetty.run();
+            jenkins.cleanUp();
+            ExtensionList.clearLegacyInstances();
+            DescriptorExtensionList.clearLegacyInstances();
+        };
     }
 
     private void setDefaultValues() {

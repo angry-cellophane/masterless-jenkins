@@ -3,6 +3,8 @@ package org.ka.jenkins.masterless.image.junkins;
 import hudson.ClassicPluginStrategy;
 import hudson.DNSMultiCast;
 import hudson.Functions;
+import hudson.model.DownloadService;
+import hudson.model.UpdateSite;
 
 import java.io.File;
 
@@ -23,6 +25,9 @@ public class PreconfigureJunkins {
             Functions.DEBUG_YUI = false;
             DNSMultiCast.disabled = true;
             ClassicPluginStrategy.useAntClassLoader = false;
+
+            DownloadService.neverUpdate = true;
+            UpdateSite.neverUpdate = true;
         } catch (Exception e) {
             throw new JunkinsException(e);
         }
