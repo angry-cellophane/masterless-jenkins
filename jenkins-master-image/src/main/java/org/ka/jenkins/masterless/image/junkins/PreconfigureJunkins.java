@@ -5,6 +5,7 @@ import hudson.DNSMultiCast;
 import hudson.Functions;
 import hudson.model.DownloadService;
 import hudson.model.UpdateSite;
+import hudson.model.User;
 
 import java.io.File;
 

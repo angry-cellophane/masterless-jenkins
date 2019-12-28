@@ -23,7 +23,8 @@ dependencies {
     implementation 'org.jenkins-ci.plugins:durable-task:1.33'
     implementation 'org.jenkins-ci.plugins:script-security:1.68@jar'
     implementation 'org.jenkins-ci.plugins:script-security:1.68'
-    implementation 'org.kohsuke:groovy-sandbox:1.25'
+    implementation 'io.jenkins:configuration-as-code:1.34@jar'
+    implementation 'io.jenkins:configuration-as-code:1.34'
 
     implementation 'com.github.ben-manes.caffeine:caffeine:2.8.0'
 
@@ -48,6 +49,7 @@ task copyPlugins(type: Copy, dependsOn: deletePlugins) {
         include '*.hpi'
         include '*.jpi'
     }
+    rename { it.replaceAll('(-[0-9.-]+)\\.(hpi|jpi)', '.$2') }
 }
 
 task deleteWar(type: Delete) {

@@ -18,6 +18,7 @@ public class JenkinsBuilder {
         try {
             var servlet = jetty.getServletContext();
             var jenkins = new Hudson(rootDir, servlet, new LocalPluginManager(servlet, rootDir));
+            jenkins.disableSecurity();
 
             JenkinsLocationConfiguration.get().setUrl("http://localhost:" + jetty.getPort() + "/jenkins/");
 

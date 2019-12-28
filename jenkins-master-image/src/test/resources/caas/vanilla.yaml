@@ -1,0 +1,8 @@
+jenkins:
+  numExecutors: 1
+  scmCheckoutRetryCount: 2
+  mode: NORMAL
+  authorizationStrategy: unsecured
+  securityRealm:
+    local:
+      allowsSignup: false
