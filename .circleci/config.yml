@@ -20,5 +20,5 @@ jobs:
             - ~/.gradle/caches
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - store_test_results:
-          path: jenkins-master-image/build/reports/tests
+          path: jenkins-master-image/build/test-results
           when: always
