@@ -31,7 +31,6 @@ dependencies {
     implementation 'com.cloudbees:groovy-cps:1.31'
     implementation 'org.jboss.marshalling:jboss-marshalling:2.0.9.Final'
     implementation 'org.jenkins-ci.plugins:scm-api:2.6.3@jar'
-//    implementation 'org.jenkins-ci.main:jenkins-test-harness:2.58'
     implementation 'org.jenkins-ci.main:jenkins-war:2.176.4'
     implementation 'org.eclipse.jetty:jetty-webapp:9.4.25.v20191220'
     implementation 'org.eclipse.jetty:jetty-security:9.4.25.v20191220'
