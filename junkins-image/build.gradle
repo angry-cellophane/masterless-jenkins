@@ -1,4 +1,17 @@
-apply plugin: 'org.jenkins-ci.jpi'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:jib-core:0.12.0'
+    }
+}
+
+
+import com.google.cloud.tools.jib.api.Containerizer
+import com.google.cloud.tools.jib.api.DockerDaemonImage
+import com.google.cloud.tools.jib.api.ImageFormat
+import com.google.cloud.tools.jib.api.Jib
 
 dependencies {
     implementation 'org.jenkins-ci.plugins:structs:1.20@jar'
@@ -40,6 +53,12 @@ dependencies {
     testImplementation libraries.JUNIT
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.ka.jenkins.masterless.image.App'
+    }
+}
+
 task deletePlugins(type: Delete) {
     delete "${buildDir}/plugins"
 }
@@ -66,3 +85,25 @@ task explodeWar(type: Copy, dependsOn: [deleteWar, copyPlugins]) {
 
 test.dependsOn(explodeWar)
 test.dependsOn(copyPlugins)
+
+task createClasspath(type: Copy, dependsOn: jar) {
+    into "${buildDir}/classpath"
+    from(configurations.default) {
+        include '*.jar'
+    }
+    from jar
+}
+
+task image(dependsOn: createClasspath) {
+    doLast {
+        Jib.from('gcr.io/distroless/java:11-debug')
+                .addLayer([file("${buildDir}/classpath").toPath()], '/tmp')
+                .addLayer([file("${buildDir}/war").toPath()], '/tmp')
+                .addLayer([file("${buildDir}/plugins").toPath()], '/tmp/jenkins_home')
+                .setFormat(ImageFormat.Docker)
+                .addEnvironmentVariable('JUNKINS_ROOT_DIR', '/tmp/jenkins_home')
+                .addEnvironmentVariable('JUNKINS_WAR_EXPLODED', '/tmp/war')
+                .setEntrypoint('java', '-classpath', "/tmp/classpath/*", 'org.ka.jenkins.masterless.image.App')
+                .containerize(Containerizer.to(DockerDaemonImage.named("junkins/masterless")))
+    }
+}

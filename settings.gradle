@@ -1,4 +1,4 @@
 include ':build-ui'
-include ':jenkins-master-image'
+include ':junkins-image'
 include ':job-controller'
 include ':reporting-plugin'
