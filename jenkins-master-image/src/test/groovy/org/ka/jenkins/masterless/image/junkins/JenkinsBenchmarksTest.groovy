@@ -1,4 +1,33 @@
 package org.ka.jenkins.masterless.image.junkins
 
-class JenkinsBenchmarksTest {
+
+import spock.lang.Specification
+
+import java.util.concurrent.TimeUnit
+
+class JenkinsBenchmarksTest extends Specification implements JenkinsHome {
+
+    static final long LIMIT_10_SECONDS = 10
+
+    void 'measure time to get jenkins running'() {
+        given:
+        def root = newDefaultJenkinsHome()
+
+        when:
+        def start = System.nanoTime()
+        def junkins = Junkins.builder()
+                .rootDir(root)
+                .warExplodedDir(new File("./build/war"))
+                .build()
+        def stop = System.nanoTime()
+
+        def duration = TimeUnit.NANOSECONDS.toSeconds(stop - start)
+
+        then:
+        duration < LIMIT_10_SECONDS
+
+        cleanup:
+        junkins?.stop()
+        root?.deleteDir()
+    }
 }

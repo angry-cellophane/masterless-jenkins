@@ -2,11 +2,14 @@ package org.ka.jenkins.masterless.image.junkins;
 
 import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
+import hudson.model.UpdateCenter;
 import jenkins.model.Jenkins;
 import org.ka.jenkins.masterless.image.junkins.jetty.Jetty;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Builder {
 
@@ -32,11 +35,25 @@ public class Builder {
 
             PreconfigureJunkins.run();
             var jetty = Jetty.startNewServer(this.warExploded);
+
+            var enableJenkinsLogs = suppressJenkinsLogs();
             var jenkins = JenkinsBuilder.build(rootDir, jetty);
+            enableJenkinsLogs.run();
+
             return new Junkins(jenkins, onStop(jenkins, jetty::doStop));
         } catch (Exception e) {
             throw new JunkinsException(e);
         }
+    }
+
+    private static Runnable suppressJenkinsLogs() {
+        var updateCenterLogger = Logger.getLogger(UpdateCenter.class.getName());
+        var updateCenterLogLevel = updateCenterLogger.getLevel();
+        updateCenterLogger.setLevel(Level.SEVERE);
+
+        return () -> {
+            updateCenterLogger.setLevel(updateCenterLogLevel);
+        };
     }
 
     private Runnable onStop(Jenkins jenkins, Runnable stopJetty) {
