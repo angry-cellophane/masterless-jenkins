@@ -17,7 +17,7 @@ jobs:
       - run: ./gradlew build
       - save_cache:
           paths:
-            - ~/.gradle/caches
+            - ~/.gradle
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - store_test_results:
           path: jenkins-master-image/build/test-results
