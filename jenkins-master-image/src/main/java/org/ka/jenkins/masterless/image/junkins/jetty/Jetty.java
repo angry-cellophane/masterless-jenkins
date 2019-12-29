@@ -1,4 +1,4 @@
-package org.ka.jenkins.masterless.image.junkins;
+package org.ka.jenkins.masterless.image.junkins.jetty;
 
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.HashLoginService;
@@ -7,12 +7,12 @@ import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.util.thread.ExecutorThreadPool;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
-import org.jvnet.hudson.test.NoListenerConfiguration;
-import org.jvnet.hudson.test.ThreadPoolImpl;
+import org.ka.jenkins.masterless.image.junkins.JunkinsException;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -89,7 +89,7 @@ public class Jetty {
         WebAppContext context = new WebAppContext(path, "/jenkins");
         context.setClassLoader(Jetty.class.getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
-        context.addBean(new NoListenerConfiguration(context));
+        context.addBean(new KillJettyListener(context));
         context.setMimeTypes(mimeTypes());
         context.getSecurityHandler().setLoginService(loginService());
         context.setResourceBase(path);
@@ -112,10 +112,14 @@ public class Jetty {
     }
 
     private static ThreadPool jettyThreadPool() {
-        return new ThreadPoolImpl(new ThreadPoolExecutor(1, 2, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+        var min = 1;
+        var max = 5;
+        var keepAliveSeconds = 10L;
+        return new ExecutorThreadPool(new ThreadPoolExecutor(min, max, keepAliveSeconds, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
                 r -> {
                     Thread t = new Thread(r);
                     t.setName("Jetty Thread Pool");
+                    t.setDaemon(true);
                     return t;
                 }));
     }

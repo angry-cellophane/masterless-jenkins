@@ -3,6 +3,7 @@ package org.ka.jenkins.masterless.image.junkins;
 import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
 import jenkins.model.Jenkins;
+import org.ka.jenkins.masterless.image.junkins.jetty.Jetty;
 
 import java.io.File;
 import java.nio.file.Files;

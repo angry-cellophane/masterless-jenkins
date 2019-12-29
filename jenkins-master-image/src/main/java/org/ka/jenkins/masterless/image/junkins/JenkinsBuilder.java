@@ -8,6 +8,7 @@ import hudson.model.UpdateSite;
 import hudson.util.PersistedList;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
+import org.ka.jenkins.masterless.image.junkins.jetty.Jetty;
 
 import javax.servlet.ServletContextEvent;
 import java.io.File;
