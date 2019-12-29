@@ -9,7 +9,7 @@ class JenkinsBenchmarksTest extends Specification implements JenkinsHome {
 
     static final long LIMIT_10_SECONDS = 10
 
-    void 'measure time to get jenkins running'() {
+    void 'time to get jenkins running < 10 sec'() {
         given:
         def root = newDefaultJenkinsHome()
 
