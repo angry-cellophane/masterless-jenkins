@@ -14,7 +14,10 @@ import com.google.cloud.tools.jib.api.ImageFormat
 import com.google.cloud.tools.jib.api.Jib
 
 dependencies {
+    // jar is for using from the app directly
     implementation 'org.jenkins-ci.plugins:structs:1.20@jar'
+    // hpi/jpi by default that is not added to the app's classpath.
+    // plugins are stored separately, Jenkins loads them via its own classloader, they are not visible in the app
     implementation 'org.jenkins-ci.plugins:structs:1.20'
     implementation 'org.jenkins-ci.plugins.workflow:workflow-api:2.38@jar'
     implementation 'org.jenkins-ci.plugins.workflow:workflow-api:2.38'
