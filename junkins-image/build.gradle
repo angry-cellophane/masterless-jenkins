@@ -96,7 +96,7 @@ task createClasspath(type: Copy, dependsOn: jar) {
 
 task image(dependsOn: createClasspath) {
     doLast {
-        Jib.from('openjdk:11-jdk-slim')
+        Jib.from('openjdk:11.0.5-jre-slim')
                 .addLayer([file("${buildDir}/classpath").toPath()], '/tmp')
                 .addLayer([file("${buildDir}/war").toPath()], '/tmp')
                 .addLayer([file("${buildDir}/plugins").toPath(), file("${projectDir}/src/test/resources/caas/jenkins.yaml").toPath()], '/tmp/jenkins_home')
