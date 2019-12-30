@@ -23,3 +23,4 @@ jobs:
       - store_test_results:
           path: jenkins-master-image/build/test-results
           when: always
+      - run: docker run junkins/masterless
