@@ -15,7 +15,7 @@ trait JenkinsHome {
         def plugins = root.toPath().resolve('plugins').toFile()
         plugins.mkdir()
 
-        root.toPath().resolve('jenkins.yaml').toFile().text = JenkinsHome.classLoader.getResource('caas/vanilla.yaml').text
+        root.toPath().resolve('jenkins.yaml').toFile().text = JenkinsHome.classLoader.getResource('caas/jenkins.yaml').text
 
         FileUtils.copyDirectory(new File("./build/plugins"), plugins);
         def ant = new AntBuilder()
