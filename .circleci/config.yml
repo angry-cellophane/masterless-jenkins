@@ -21,6 +21,6 @@ jobs:
             - ~/.gradle
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - store_test_results:
-          path: jenkins-master-image/build/test-results
+          path: junkins-image/build/test-results
           when: always
       - run: docker run junkins/masterless
