@@ -1,7 +1,4 @@
 buildscript {
-    repositories {
-        mavenCentral()
-    }
     dependencies {
         classpath 'com.google.cloud.tools:jib-core:0.12.0'
     }
@@ -52,10 +49,6 @@ dependencies {
     implementation 'org.jenkins-ci.main:jenkins-war:2.176.4'
     implementation 'org.eclipse.jetty:jetty-webapp:9.4.25.v20191220'
     implementation 'org.eclipse.jetty:jetty-security:9.4.25.v20191220'
-
-    testImplementation libraries.GROOVY
-    testImplementation libraries.SPOCK
-    testImplementation libraries.JUNIT
 }
 
 jar {

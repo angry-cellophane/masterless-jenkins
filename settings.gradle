@@ -1,4 +1,6 @@
 include ':build-ui'
 include ':junkins-image'
 include ':job-controller'
+include ':build-storage'
+include ':build-storage-client'
 include ':reporting-plugin'

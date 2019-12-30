@@ -1,0 +1,6 @@
+{
+  "name": "StepResult",
+  "namespace": "org.ka.junkins.storage.client",
+  "type": "enum",
+  "symbols": ["FAILED", "SUCCEEDED"]
+}

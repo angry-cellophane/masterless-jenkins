@@ -1,0 +1,13 @@
+{
+  "name": "BuildStep",
+  "namespace": "org.ka.junkins.storage.client",
+  "type": "record",
+  "fields": [
+    { "name": "buildId", "type": "string"},
+    { "name": "parentStepId", "type": "int"},
+    { "name": "stepId", "type": "int"},
+    { "name": "name", "type": "string"},
+    { "name": "log", "type": {"type": "array", "items": "string"}},
+    { "name": "result", "type": "StepResult"}
+  ]
+}

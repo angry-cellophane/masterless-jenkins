@@ -12,8 +12,16 @@ ext.libraries = [
 ]
 
 subprojects {
+    buildscript {
+        repositories {
+            mavenCentral()
+            jcenter()
+        }
+    }
+
     repositories {
         mavenCentral()
+        jcenter()
         maven { url = 'https://repo.jenkins-ci.org/public/' }
     }
 
@@ -30,5 +38,11 @@ subprojects {
             events "passed", "skipped", "failed"
             exceptionFormat = 'full'
         }
+    }
+
+    dependencies {
+        testImplementation libraries.GROOVY
+        testImplementation libraries.SPOCK
+        testImplementation libraries.JUNIT
     }
 }
