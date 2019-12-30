@@ -96,14 +96,16 @@ task createClasspath(type: Copy, dependsOn: jar) {
 
 task image(dependsOn: createClasspath) {
     doLast {
-        Jib.from('gcr.io/distroless/java:11-debug')
+        Jib.from('openjdk:11-jdk-slim')
                 .addLayer([file("${buildDir}/classpath").toPath()], '/tmp')
                 .addLayer([file("${buildDir}/war").toPath()], '/tmp')
-                .addLayer([file("${buildDir}/plugins").toPath()], '/tmp/jenkins_home')
-                .setFormat(ImageFormat.Docker)
+                .addLayer([file("${buildDir}/plugins").toPath(), file("${projectDir}/src/test/resources/caas/jenkins.yaml").toPath()], '/tmp/jenkins_home')
+                .setFormat(ImageFormat.OCI)
                 .addEnvironmentVariable('JUNKINS_ROOT_DIR', '/tmp/jenkins_home')
                 .addEnvironmentVariable('JUNKINS_WAR_EXPLODED', '/tmp/war')
                 .setEntrypoint('java', '-classpath', "/tmp/classpath/*", 'org.ka.jenkins.masterless.image.App')
                 .containerize(Containerizer.to(DockerDaemonImage.named("junkins/masterless")))
     }
 }
+
+build.dependsOn(image)
