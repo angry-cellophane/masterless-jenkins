@@ -1,20 +1,16 @@
 package org.ka.junkins.storage.server.cassandra;
 
-import com.datastax.oss.driver.api.core.CqlSession;
-
-import java.util.function.Supplier;
-
-public class Mappers {
+public class Mapping {
     public interface Module {
         BuildStorageMapper.BuildStepDao buildStepDao();
         BuildStorageMapper.BuildDao buildDao();
     }
 
-    public static Cassandra.Module create(Supplier<CqlSession> sessionSupplier) {
-        var session = sessionSupplier.get();
+    public static Mapping.Module create(Cassandra.Module cassandra) {
+        var session = cassandra.sessionSupplier().get();
 
         var mapper = new BuildStorageMapperBuilder(session).build();
-        return new Cassandra.Module() {
+        return new Module() {
             @Override
             public BuildStorageMapper.BuildStepDao buildStepDao() {
                 return mapper.buildStepDao();
