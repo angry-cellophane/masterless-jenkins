@@ -17,8 +17,17 @@ public class Endpoints {
     }
 
     public static class V1 {
-        public static final String POST_BUILD_INFO = "/v1/ingest/build";
-        public static final String POST_BUILD_STEP_INFO = "/v1/ingest/build_step";
+        public static final String INGEST = "/v1/ingest";
+        public static final String POST_BUILD_INFO = "/build";
+        public static final String POST_BUILD_STEP_INFO = "/build_step";
+
+        public static String postBuildInfoPath() {
+            return INGEST + POST_BUILD_INFO;
+        }
+
+        public static String postBuildStepPath() {
+            return INGEST + POST_BUILD_STEP_INFO;
+        }
 
         private final Endpoint<Build> buildInfo;
         private final Endpoint<BuildStep> buildStepInfo;
@@ -27,11 +36,11 @@ public class Endpoints {
             try {
                 this.buildInfo = new Endpoint<>(
                         Build.class,
-                        new URI(normalize(baseUrl) + POST_BUILD_INFO)
+                        new URI(normalize(baseUrl) + postBuildInfoPath())
                 );
                 this.buildStepInfo = new Endpoint<>(
                         BuildStep.class,
-                        new URI(normalize(baseUrl) + POST_BUILD_STEP_INFO)
+                        new URI(normalize(baseUrl) + postBuildStepPath())
                 );
             } catch (URISyntaxException e) {
                 throw new ClientException(e);

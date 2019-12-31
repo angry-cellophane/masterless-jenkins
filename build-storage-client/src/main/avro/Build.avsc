@@ -7,6 +7,6 @@
     { "name": "name", "type": "string"},
     { "name": "number", "type": "int"},
     { "name": "status", "type": "BuildStatus"},
-    { "name": "result", "type": "BuildResult"}
+    { "name": "result", "type": ["null", "BuildResult"], "default": null}
   ]
 }

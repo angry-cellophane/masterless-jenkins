@@ -37,7 +37,32 @@ class ClientTest extends Specification {
 
         then:
         def request = server.takeRequest()
-        request.getPath() == Endpoints.V1.POST_BUILD_INFO
+        request.getPath() == Endpoints.V1.postBuildInfoPath()
+        request.getMethod() == 'POST'
+
+        when:
+        def received = Avro.from(Build, request.body.readByteArray())
+
+        then:
+        received == build
+    }
+
+    void 'default value for result is set'() {
+        given:
+        def build = Build.newBuilder()
+                .setId('id#1')
+                .setName('build#1')
+                .setNumber(1)
+                .setStatus(BuildStatus.COMPLETED)
+                .build()
+
+        when:
+        server.enqueue(new MockResponse().setResponseCode(200))
+        clients.of(Build).submit(build)
+
+        then:
+        def request = server.takeRequest()
+        request.getPath() == Endpoints.V1.postBuildInfoPath()
         request.getMethod() == 'POST'
 
         when:
@@ -64,7 +89,7 @@ class ClientTest extends Specification {
 
         then:
         def request = server.takeRequest()
-        request.getPath() == Endpoints.V1.POST_BUILD_STEP_INFO
+        request.getPath() == Endpoints.V1.postBuildStepPath()
         request.getMethod() == 'POST'
 
         when:
