@@ -1,0 +1,12 @@
+dependencies {
+    implementation project(':build-service-client')
+    implementation 'com.sparkjava:spark-core:2.9.1'
+
+    implementation 'com.datastax.oss:java-driver-core:4.3.0'
+    implementation 'com.datastax.oss:java-driver-mapper-runtime:4.3.0'
+    annotationProcessor 'com.datastax.oss:java-driver-mapper-processor:4.3.0'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'com.chrisomeara:pillar_2.10:2.3.0'
+
+    implementation 'com.github.nosan:embedded-cassandra:3.0.2'
+}

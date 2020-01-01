@@ -1,6 +1,0 @@
-{
-  "name": "BuildStatus",
-  "namespace": "org.ka.junkins.storage.client",
-  "type": "enum",
-  "symbols": ["NOT_STARTED", "RUNNING", "COMPLETED"]
-}
