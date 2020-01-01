@@ -56,7 +56,7 @@ class WebApiTest extends Specification {
                 .setName('build#1')
                 .setId('id#1')
                 .setNumber(1)
-                .setStatus(BuildStatus.NOT_STARTED)
+                .setStatus(BuildStatus.RUNNING)
                 .build()
 
         when:
