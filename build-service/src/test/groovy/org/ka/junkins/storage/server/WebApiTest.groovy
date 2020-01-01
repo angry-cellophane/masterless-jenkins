@@ -54,7 +54,8 @@ class WebApiTest extends Specification {
         given:
         def build = Build.newBuilder()
                 .setName('build#1')
-                .setId('id#1')
+                .setBuildId('id#1')
+                .setJobId('job#1')
                 .setNumber(1)
                 .setStatus(BuildStatus.RUNNING)
                 .build()
