@@ -14,6 +14,7 @@ class EmbeddedCassandra {
     static Cassandra.Module create() {
         def cassandra = new EmbeddedCassandraBuilder()
                 .withArtifact(Artifact.ofVersion("4.0-alpha2"))
+                .withJvmOptions('-Xms256m -Xmx512m')
                 .create()
         cassandra.start()
 
