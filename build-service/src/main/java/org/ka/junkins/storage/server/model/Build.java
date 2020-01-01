@@ -12,12 +12,12 @@ import java.util.UUID;
 @Data
 @NamingStrategy(convention = NamingConvention.SNAKE_CASE_INSENSITIVE)
 public class Build {
-    UUID buildId;
-    UUID jobId;
+    String buildId;
+    String jobId;
     int number;
     String status;
     String result;
-    Instant startTs;
-    Instant finishTs;
-    Instant lastUpdateTs;
+    Long startedTs;
+    Long finishedTs;
+    Long lastUpdateTs;
 }

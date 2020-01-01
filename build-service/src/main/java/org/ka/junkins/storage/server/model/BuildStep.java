@@ -12,13 +12,13 @@ import java.util.UUID;
 @Data
 @NamingStrategy(convention = NamingConvention.SNAKE_CASE_INSENSITIVE)
 public class BuildStep {
-    UUID buildId;
+    String buildId;
     int stepId;
     int parentId;
     String name;
     String result;
     String log;
-    Instant startTs;
-    Instant finishTs;
-    Instant lastUpdateTs;
+    Long startedTs;
+    Long finishedTs;
+    Long lastUpdateTs;
 }

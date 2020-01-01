@@ -17,7 +17,12 @@ public class StoreDataServices {
         var buildStepDao = mappers.buildStepDao();
 
         Consumer<Build> processBuild = build -> {
-//            buildDao.updateBuild();
+//            buildDao.updateBuild(UUID.fromString(build.getJobId()),
+//                    build.getNumber(),
+//                    UUID.fromString(build.getBuildId()),
+//                    build.getStatus().name(),
+//                    Optional.ofNullable(build.getResult()).map(Enum::name).orElse(null),
+//            );
         };
         Consumer<BuildStep> processBuildStep = buildStep -> { };
         return new Module() {

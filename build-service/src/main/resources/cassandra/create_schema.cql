@@ -2,29 +2,29 @@ CREATE KEYSPACE junkins WITH REPLICATION = {'class':'SimpleStrategy', 'replicati
 ;
 
 CREATE TABLE IF NOT EXISTS junkins.builds (
-    build_id uuid,
-    job_id uuid,
+    build_id text,
+    job_id text,
     number int,
     status text,
     result text,
-    start_ts timestamp,
-    finish_ts timestamp,
-    last_update_ts timestamp,
+    started_ts bigint,
+    finished_ts bigint,
+    last_update_ts bigint,
     PRIMARY KEY ((job_id), number)
 )
 WITH CLUSTERING ORDER BY (number DESC)
 ;
 
 CREATE TABLE IF NOT EXISTS junkins.build_steps (
-    build_id uuid,
+    build_id text,
     step_id int,
     parent_id int,
     name text,
     result text,
     log text,
-    start_ts timestamp,
-    finish_ts timestamp,
-    last_update_ts timestamp,
+    started_ts bigint,
+    finished_ts bigint,
+    last_update_ts bigint,
     PRIMARY KEY ((build_id), step_id)
 )
 WITH CLUSTERING ORDER BY (step_id DESC)
