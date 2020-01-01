@@ -10,12 +10,14 @@ class ClientTest extends Specification {
 
     @Shared MockWebServer server
     @Shared Clients clients
+    @Shared Endpoints.V1 api
 
     void setupSpec() {
         server = new MockWebServer()
         server.start()
 
         clients = Clients.create(server.url('').url)
+        api = Endpoints.V1.from('')
     }
 
     void cleanupSpec() {
@@ -38,7 +40,7 @@ class ClientTest extends Specification {
 
         then:
         def request = server.takeRequest()
-        request.getPath() == Endpoints.V1.postBuildInfoPath()
+        request.getPath() == api.POST_BUILD
         request.getMethod() == 'POST'
 
         when:
@@ -63,7 +65,7 @@ class ClientTest extends Specification {
 
         then:
         def request = server.takeRequest()
-        request.getPath() == Endpoints.V1.postBuildInfoPath()
+        request.getPath() == api.POST_BUILD
         request.getMethod() == 'POST'
 
         when:
@@ -90,7 +92,7 @@ class ClientTest extends Specification {
 
         then:
         def request = server.takeRequest()
-        request.getPath() == Endpoints.V1.postBuildStepPath()
+        request.getPath() == api.POST_BUILD_STEP
         request.getMethod() == 'POST'
 
         when:

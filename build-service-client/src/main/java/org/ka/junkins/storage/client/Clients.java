@@ -3,6 +3,7 @@ package org.ka.junkins.storage.client;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.ka.junkins.avro.Avro;
 
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -31,19 +32,19 @@ public class Clients {
                 .version(HttpClient.Version.HTTP_2)
                 .build();
 
-        var endpoints = Endpoints.V1.from(baseUrl);
+        var V1 = Endpoints.V1.from(baseUrl);
         Map<Class<? extends SpecificRecordBase>, Client<? extends SpecificRecordBase>> submitters = Map.of(
-                Build.class, newSubmitter(http, endpoints.postBuildInfo()),
-                BuildStep.class, newSubmitter(http, endpoints.postBuildStep())
+                Build.class, newSubmitter(http, V1.POST_BUILD),
+                BuildStep.class, newSubmitter(http, V1.POST_BUILD_STEP)
         );
         return new Clients(submitters);
     }
 
-    private static <T extends SpecificRecordBase> Client<T> newSubmitter(HttpClient http, Endpoints.Endpoint<T> endpoint) {
+    private static <T extends SpecificRecordBase> Client<T> newSubmitter(HttpClient http, String endpoint) {
         return (object) -> {
             try {
                 var request = HttpRequest.newBuilder()
-                        .uri(endpoint.uri)
+                        .uri(new URI(endpoint))
                         .POST(HttpRequest.BodyPublishers.ofInputStream(() -> Avro.serialize(object)))
                         .build();
 

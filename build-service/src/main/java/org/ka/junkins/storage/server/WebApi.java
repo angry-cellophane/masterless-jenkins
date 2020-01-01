@@ -7,7 +7,6 @@ import org.ka.junkins.storage.client.Endpoints;
 import org.ka.junkins.storage.server.services.StoreDataServices;
 import spark.Spark;
 
-import static spark.Spark.path;
 import static spark.Spark.port;
 import static spark.Spark.post;
 
@@ -21,22 +20,22 @@ public class WebApi {
         var processBuild = services.processBuild();
         var processBuildStep = services.processBuildStep();
 
+        var V1 = Endpoints.V1.from("");
+
         return new Module() {
             @Override
             public void start() {
                 port(4567);
-                path(Endpoints.V1.INGEST, () -> {
-                    post(Endpoints.V1.POST_BUILD_INFO, (req, resp) -> {
+                    post(V1.POST_BUILD, (req, resp) -> {
                         var build = Avro.from(Build.class, req.raw().getInputStream());
                         processBuild.accept(build);
                         return "";
                     });
-                    post(Endpoints.V1.POST_BUILD_STEP_INFO, (req, resp) -> {
+                    post(V1.POST_BUILD_STEP, (req, resp) -> {
                         var buildStep = Avro.from(BuildStep.class, req.raw().getInputStream());
                         processBuildStep.accept(buildStep);
                         return "";
                     });
-                });
             }
 
             @Override
