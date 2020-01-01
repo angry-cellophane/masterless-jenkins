@@ -4,6 +4,7 @@ import org.ka.junkins.storage.client.Build;
 import org.ka.junkins.storage.client.BuildStep;
 import org.ka.junkins.storage.server.cassandra.Mapping;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class StoreDataServices {
@@ -17,11 +18,11 @@ public class StoreDataServices {
         var buildStepDao = mappers.buildStepDao();
 
         Consumer<Build> processBuild = build -> {
-//            buildDao.updateBuild(UUID.fromString(build.getJobId()),
+//            buildDao.updateBuild(build.getJobId(),
 //                    build.getNumber(),
-//                    UUID.fromString(build.getBuildId()),
+//                    build.getBuildId(),
 //                    build.getStatus().name(),
-//                    Optional.ofNullable(build.getResult()).map(Enum::name).orElse(null),
+//                    Optional.ofNullable(build.getResult()).map(Enum::name).orElse(null)
 //            );
         };
         Consumer<BuildStep> processBuildStep = buildStep -> { };

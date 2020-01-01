@@ -3,7 +3,8 @@
   "namespace": "org.ka.junkins.storage.client",
   "type": "record",
   "fields": [
-    { "name": "id", "type": "string"},
+    { "name": "buildId", "type": "string"},
+    { "name": "jobId", "type": "string"},
     { "name": "name", "type": "string"},
     { "name": "number", "type": "int"},
     { "name": "status", "type": "BuildStatus"},

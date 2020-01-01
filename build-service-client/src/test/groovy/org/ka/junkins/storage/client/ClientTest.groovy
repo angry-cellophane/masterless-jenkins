@@ -27,7 +27,8 @@ class ClientTest extends Specification {
     void 'send valid build'() {
         given:
         def build = Build.newBuilder()
-                .setId('id#1')
+                .setBuildId('id#1')
+                .setJobId('job#1')
                 .setName('build#1')
                 .setNumber(1)
                 .setResult(BuildResult.SUCCEEDED)
@@ -53,7 +54,8 @@ class ClientTest extends Specification {
     void 'default value for result is set'() {
         given:
         def build = Build.newBuilder()
-                .setId('id#1')
+                .setBuildId('id#1')
+                .setJobId('job#1')
                 .setName('build#1')
                 .setNumber(1)
                 .setStatus(BuildStatus.COMPLETED)
