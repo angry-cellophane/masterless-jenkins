@@ -4,7 +4,7 @@ package org.ka.junkins.storage.server.cassandra
 import spock.lang.Shared
 import spock.lang.Specification
 
-class CassandraTest extends Specification {
+class MappingTest extends Specification {
 
     @Shared Cassandra.Module cassandra
     @Shared BuildStorageMapper.BuildDao buildDao
@@ -19,7 +19,7 @@ class CassandraTest extends Specification {
     }
 
     void cleanupSpec() {
-        cassandra.stop()
+        cassandra?.stop()
     }
 
     void 'insert a new build and read it'() {
