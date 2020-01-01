@@ -2,6 +2,7 @@ package org.ka.junkins.storage.client
 
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.ka.junkins.avro.Avro
 import spock.lang.Shared
 import spock.lang.Specification
 

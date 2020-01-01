@@ -1,6 +1,7 @@
 package org.ka.junkins.storage.client;
 
 import org.apache.avro.specific.SpecificRecordBase;
+import org.ka.junkins.avro.Avro;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

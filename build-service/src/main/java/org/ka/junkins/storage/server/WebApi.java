@@ -1,6 +1,6 @@
 package org.ka.junkins.storage.server;
 
-import org.ka.junkins.storage.client.Avro;
+import org.ka.junkins.avro.Avro;
 import org.ka.junkins.storage.client.Build;
 import org.ka.junkins.storage.client.BuildStep;
 import org.ka.junkins.storage.client.Endpoints;

@@ -7,7 +7,7 @@ buildscript {
 apply plugin: 'com.commercehub.gradle.plugin.avro'
 
 dependencies {
-    api 'org.apache.avro:avro:1.9.1'
+    implementation project(':avro-tools')
 
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.2.2'
 }

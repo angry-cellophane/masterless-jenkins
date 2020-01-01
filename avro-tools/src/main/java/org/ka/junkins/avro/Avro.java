@@ -1,10 +1,9 @@
-package org.ka.junkins.storage.client;
+package org.ka.junkins.avro;
 
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
-import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.avro.util.ByteBufferInputStream;
 import org.apache.avro.util.ByteBufferOutputStream;
 
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Avro {
+
     private static final Map<Class<?>, SpecificDatumReader<?>> READERS = new ConcurrentHashMap<>();
     private static final Map<Class<?>, SpecificDatumWriter<?>> WRITERS = new ConcurrentHashMap<>();
 
@@ -24,7 +24,7 @@ public class Avro {
         try {
             return clazz.cast(reader.read(null, decoder));
         } catch (IOException e) {
-            throw new ClientException(e);
+            throw new JunkinsException(e);
         }
     }
 
@@ -35,7 +35,7 @@ public class Avro {
         try {
             return clazz.cast(reader.read(null, decoder));
         } catch (IOException e) {
-            throw new ClientException(e);
+            throw new JunkinsException(e);
         }
     }
 
@@ -52,7 +52,9 @@ public class Avro {
                 return new ByteBufferInputStream(out.getBufferList());
             }
         } catch (IOException e) {
-            throw new ClientException(e);
+            throw new JunkinsException(e);
         }
     }
+
+    private Avro() {}
 }
