@@ -1,5 +1,5 @@
 include ':build-ui'
-include ':avro-tools'
+include ':http-tools'
 include ':junkins-image'
 include ':job-service'
 include ':build-service'

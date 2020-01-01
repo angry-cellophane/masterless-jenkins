@@ -1,6 +1,6 @@
 dependencies {
     implementation project(':build-service-client')
-    implementation project(':avro-tools')
+    implementation project(':http-tools')
     implementation 'com.sparkjava:spark-core:2.9.1'
 
     implementation 'com.datastax.oss:java-driver-core:4.3.0'
