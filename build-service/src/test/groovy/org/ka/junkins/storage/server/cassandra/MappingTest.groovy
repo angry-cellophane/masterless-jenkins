@@ -27,9 +27,10 @@ class MappingTest extends Specification {
         def jobId = UUID.randomUUID()
         def buildId = UUID.randomUUID()
         int number = 1
+        def startedTs = new Date().toInstant()
 
         when:
-        buildDao.newBuild(buildId, jobId, number, 'RUNNING')
+        buildDao.updateBuild(jobId, number, buildId, 'RUNNING', null, startedTs, null)
         def build = buildDao.findBuild(jobId, number)
 
         then:
@@ -37,7 +38,7 @@ class MappingTest extends Specification {
         build.get().buildId == buildId
         build.get().jobId == jobId
         build.get().number == number
-        build.get().startTs != null
+        build.get().startTs == startedTs
         build.get().lastUpdateTs != null
         build.get().finishTs == null
         build.get().result == null
@@ -49,10 +50,12 @@ class MappingTest extends Specification {
         def jobId = UUID.randomUUID()
         def buildId = UUID.randomUUID()
         int number = 2
+        def startedTs = new Date().toInstant()
 
         when:
-        buildDao.newBuild(buildId, jobId, number, 'RUNNING')
-        buildDao.buildFinished(jobId, number, 'DONE', 'SUCCESS')
+        buildDao.updateBuild(jobId, number, buildId, 'RUNNING', null, startedTs, null)
+        def finishTs = new Date().toInstant()
+        buildDao.updateBuild(jobId, number, buildId, 'DONE', 'SUCCESS', startedTs, finishTs)
 
         def build = buildDao.findBuild(jobId, number)
 
@@ -61,9 +64,9 @@ class MappingTest extends Specification {
         build.get().buildId == buildId
         build.get().jobId == jobId
         build.get().number == number
-        build.get().startTs != null
+        build.get().startTs == startedTs
         build.get().lastUpdateTs != null
-        build.get().finishTs != null
+        build.get().finishTs == finishTs
         build.get().result == 'SUCCESS'
         build.get().status == 'DONE'
     }
@@ -74,7 +77,7 @@ class MappingTest extends Specification {
 
         when:
         10.times {
-            buildDao.newBuild(UUID.randomUUID(), jobId, it, 'RUNNING')
+            buildDao.updateBuild(jobId, it, UUID.randomUUID(), 'RUNNING', null, new Date().toInstant(), null)
         }
         def builds = buildDao.findBuildByJob(jobId).all()
 

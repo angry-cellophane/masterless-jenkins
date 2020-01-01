@@ -13,7 +13,11 @@ public class StoreDataServices {
     }
 
     public static Module create(Mapping.Module mappers) {
-        Consumer<Build> processBuild = build -> { };
+        var buildDao = mappers.buildDao();
+        var buildStepDao = mappers.buildStepDao();
+
+        Consumer<Build> processBuild = build -> {
+        };
         Consumer<BuildStep> processBuildStep = buildStep -> { };
         return new Module() {
            @Override

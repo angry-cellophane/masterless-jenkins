@@ -16,11 +16,8 @@ import java.util.UUID;
 public interface BuildStorageMapper {
     @Dao
     interface BuildDao {
-        @Query("insert into junkins.builds (build_id, job_id, number, status, start_ts, last_update_ts) values (:buildId, :jobId, :number, :status, toTimestamp(now()), toTimestamp(now()) )")
-        void newBuild(UUID buildId, UUID jobId, int number, String status);
-
-        @Query("update junkins.builds set status = :status, result = :result, last_update_ts = toTimestamp(now()), finish_ts = toTimestamp(now()) where job_id = :jobId and number = :number")
-        void buildFinished(UUID jobId, int number, String status, String result);
+        @Query("update junkins.builds set build_id = :buildId, status = :status, result = :result, last_update_ts = toTimestamp(now()), start_ts = :startTs, finish_ts = :finishTs where job_id = :jobId and number = :number")
+        void updateBuild(UUID jobId, int number, UUID buildId, String status, String result, Instant startTs, Instant finishTs);
 
         @Query("select build_id, job_id, number, status, result, start_ts, finish_ts, last_update_ts from junkins.builds where job_id = :jobId and number = :number")
         Optional<Build> findBuild(UUID jobId, int number);
